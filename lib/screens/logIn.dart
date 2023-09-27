@@ -33,8 +33,12 @@ class _LoginInState extends State<LoginIn> {
               height: 67,
               child: TextFormField(
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white24,
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.white, width: 2),
+                  ),
                   labelText: 'Username',
                 ),
               ),
@@ -45,12 +49,42 @@ class _LoginInState extends State<LoginIn> {
               height: 67,
               child: TextFormField(
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white24,
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.white, width: 2),
+                  ),
                   labelText: 'Password',
                 ),
               ),
-            )
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: 150,
+              height: 40,
+              child: ElevatedButton(
+                onPressed: () {
+
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white70),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // Adjust the radius to make it circular
+                    ),
+                  ),
+                ),
+                child: const Text('Login',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'logIn.dart';
 
 class SettingPage extends StatefulWidget {
@@ -11,6 +10,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F3),

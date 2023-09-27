@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sepb_web_app/screens/settings.dart';
+import 'package:sepb_web_app/screens/menu.dart';
+import 'package:sepb_web_app/util/constants.dart';
+import 'package:sepb_web_app/util/helperFunctions.dart';
+import 'package:sepb_web_app/widgets/cardCustomized.dart';
+import 'package:sepb_web_app/widgets/formattedText.dart';
+import 'package:sepb_web_app/widgets/navBar.dart';
+import 'screens/logIn.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,32 +17,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return const MaterialApp(
+      title: 'monitor.node',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-
-
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return SettingPage();
+    return const Menu();
   }
 }
