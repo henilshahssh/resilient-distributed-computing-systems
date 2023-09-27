@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sepb_web_app/util/constants.dart';
+import 'package:sepb_web_app/util/helperFunctions.dart';
+import 'package:sepb_web_app/widgets/cardCustomized.dart';
+import 'package:sepb_web_app/widgets/formattedText.dart';
+import 'package:sepb_web_app/widgets/navBar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,62 +14,67 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return const MaterialApp(
+      title: 'monitor.node',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+      backgroundColor: backgroundScaffoldColor,
+      body: Column(
+        children: [
+          const NavBar(),
+          Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(20),
+                child: CardCustomized(
+                  width: getScreenWidth(context),
+                  height: getScreenHeight(context) * 0.4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 25, top: 20),
+                        child: FormattedText(
+                          text: "New system",
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 40, top: 20, bottom: 20),
+                        child: const CardCustomized(
+                          child: Center(
+                            child: Icon(
+                              Icons.add_rounded,
+                              size: 60,
+                              color: primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
