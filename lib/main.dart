@@ -6,6 +6,8 @@ import 'package:sepb_web_app/widgets/cardCustomized.dart';
 import 'package:sepb_web_app/widgets/formattedText.dart';
 import 'package:sepb_web_app/widgets/navBar.dart';
 
+import 'screens/logIn.dart';
+
 void main() {
   runApp(const MyApp());
 }
