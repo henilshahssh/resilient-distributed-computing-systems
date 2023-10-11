@@ -41,8 +41,8 @@ class _NavBarState extends State<NavBar> {
             margin: const EdgeInsets.only(left: 30, bottom: 10),
             child: Row(
               children: [
-                navItem(heading: "Menu", color: selectedMenuNavBarColor),
-                navItem(heading: "Dashboard"),
+                navItem(heading: "Menu"),
+                navItem(heading: "Dashboard",color: selectedMenuNavBarColor),
                 navItem(heading: "Support"),
                 navItem(heading: "Settings"),
               ],
