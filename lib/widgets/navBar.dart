@@ -3,7 +3,8 @@ import '../util/constants.dart';
 import 'formattedText.dart';
 
 class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+  final double screenIndex;
+  const NavBar({super.key, required this.screenIndex});
 
   @override
   State<NavBar> createState() => _NavBarState();
@@ -41,10 +42,10 @@ class _NavBarState extends State<NavBar> {
             margin: const EdgeInsets.only(left: 30, bottom: 10),
             child: Row(
               children: [
-                navItem(heading: "Menu"),
-                navItem(heading: "Dashboard",color: selectedMenuNavBarColor),
-                navItem(heading: "Support"),
-                navItem(heading: "Settings"),
+                navItem(heading: "Menu", isSelected: 0 == widget.screenIndex),
+                navItem(heading: "Dashboard", isSelected: 1 == widget.screenIndex),
+                navItem(heading: "Support", isSelected: 2 == widget.screenIndex),
+                navItem(heading: "Settings", isSelected: 3 == widget.screenIndex),
               ],
             ),
           )
@@ -53,9 +54,11 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
-  Widget navItem(
-      {required String heading,
-      Color? color = const Color.fromRGBO(0, 64, 57, 0)}) {
+  Widget navItem({required String heading,
+      required bool isSelected}) {
+
+    Color? color = (isSelected) ? selectedMenuNavBarColor : const Color.fromRGBO(0, 64, 57, 0);
+
     return Container(
       margin: const EdgeInsets.only(right: 10),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),

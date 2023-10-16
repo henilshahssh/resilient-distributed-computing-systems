@@ -4,6 +4,9 @@ import 'package:http_parser/http_parser.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sepb_web_app/main.dart';
+import 'package:sepb_web_app/screens/home.dart';
+import 'package:sepb_web_app/screens/settings.dart';
 import '../util/constants.dart';
 import '../util/helperFunctions.dart';
 import '../widgets/cardCustomized.dart';
@@ -26,7 +29,7 @@ class _MenuState extends State<Menu> {
       backgroundColor: backgroundScaffoldColor,
       body: Column(
         children: [
-          const NavBar(),
+          const NavBar(screenIndex: 0,),
           Column(
             children: [
               Container(
@@ -50,6 +53,9 @@ class _MenuState extends State<Menu> {
                             left: 40, top: 20, bottom: 20),
                         child: GestureDetector(
                           onTap: () async {
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+
+                            // logicStart
                             var filePickerResult;
                             var jsonFileString;
 
@@ -59,56 +65,26 @@ class _MenuState extends State<Menu> {
                               allowedExtensions: ['json'],
                             ).then((result) => result);
 
-                            print("62");
                             if (filePickerResult != null &&
                                 filePickerResult.files.isNotEmpty) {
                               jsonFileString =
                                   utf8.decode(filePickerResult.files[0].bytes);
 
-                              // print("68");
-                              // var bodyList = [
-                              //   "Content-Disposition: form-data; name='fileb'; filename='init.json'",
-                              //   "Content-Type: application/json",
-                              //   jsonFileString
-                              // ];
-                              //
-                              // final response = await http.post(
-                              //     Uri.parse("http://170.64.160.83:9000/files"),
-                              //     // headers: {
-                              //     //   "Access-Control-Allow-Origin": "*",
-                              //     //   'Content-Type': 'application/json',
-                              //     //   'Accept': '*/*'
-                              //     // },
-                              //     body: bodyList);
-                              // print(response.body);
-
-                              // final request = http.MultipartRequest(
-                              //   'POST',
-                              //   Uri.parse('http://170.64.160.83:9000/files'),
-                              // );
-                              //
-                              // request.files.add(
-                              //   http.MultipartFile
-                              //       .fromString('fileb', jsonFileString, contentType: MediaType('multipart', 'form-data'))
-                              // );
-                              //
-                              // final response = await http.Response.fromStream(await request.send());
-                              //
-                              // print(response.body);
-
-
-                              final url = Uri.parse('http://170.64.160.83:9000/files');
+                              final url = Uri.parse('http://localhost:9000/files');
+                              final fileName = filePickerResult.names[0];
+                              print(fileName);
 
                               final req = http.MultipartRequest('POST', url)
                                 ..files.add(await http.MultipartFile.fromBytes(
                                   'fileb',
                                     filePickerResult.files[0].bytes,
-                                  filename: 'download.json',
+                                  filename: fileName,
                                   contentType: MediaType('application', 'json'),
                                 ));
 
                               req.headers['accept'] = 'application/json';
                               req.headers['Content-Type'] = 'multipart/form-data';
+                              req.headers['Access-Control-Allow-Origin'] = '*';
 
                               final stream = await req.send();
                               final response = await http.Response.fromStream(stream);
@@ -128,12 +104,15 @@ class _MenuState extends State<Menu> {
                                         Text("Configuration file uploaded."),
                                   ),
                                 );
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+
                               } else {
                                 // If the server did not return a 200 OK response,
                                 // then throw an exception.
-                                print(response.body);
+                                // print(response.body);
                                 print(response.statusCode);
-                                print(req.headers);
+                                // print(req.headers);
                                 throw Exception('Failed to Post config');
                               }
                             } else {
@@ -145,6 +124,9 @@ class _MenuState extends State<Menu> {
                                 ),
                               );
                             }
+
+                            // logicEnd
+
                           },
                           // child: ElevatedButton(
                           //   onPressed: () {  },
