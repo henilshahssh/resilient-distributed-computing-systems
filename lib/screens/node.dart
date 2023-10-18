@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:sepb_web_app/util/constants.dart';
 import 'package:sepb_web_app/widgets/cardCustomized.dart';
 import 'package:sepb_web_app/widgets/formattedText.dart';
@@ -17,15 +18,16 @@ class _NodeInfoState extends State<NodeInfo> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: backgroundScaffoldColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            NavBar(
-              screenIndex: 0,
+            const NavBar(
+              screenIndex: 1,
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -214,7 +216,7 @@ class _NodeInfoState extends State<NodeInfo> {
                       child: Column(
                         children: [
                           FormattedText(
-                            text: 'Monitor',
+                            text: 'Monitors/Node connections',
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
                           ),
@@ -247,7 +249,7 @@ class _NodeInfoState extends State<NodeInfo> {
                     },
                     style: ElevatedButton.styleFrom(
                       primary:
-                          Colors.white, // Set the background color to white
+                      Colors.white, // Set the background color to white
                     ),
                     child: FormattedText(
                       text: "Delete Node",

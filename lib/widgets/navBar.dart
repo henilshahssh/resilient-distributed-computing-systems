@@ -44,8 +44,8 @@ class _NavBarState extends State<NavBar> {
               children: [
                 navItem(heading: "Menu", isSelected: 0 == widget.screenIndex),
                 navItem(heading: "Dashboard", isSelected: 1 == widget.screenIndex),
-                navItem(heading: "Support", isSelected: 2 == widget.screenIndex),
-                navItem(heading: "Settings", isSelected: 3 == widget.screenIndex),
+                // navItem(heading: "Support", isSelected: 2 == widget.screenIndex),
+                // navItem(heading: "Settings", isSelected: 3 == widget.screenIndex),
               ],
             ),
           )

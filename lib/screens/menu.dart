@@ -4,9 +4,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:sepb_web_app/main.dart';
 import 'package:sepb_web_app/screens/home.dart';
-import 'package:sepb_web_app/screens/settings.dart';
 import '../util/constants.dart';
 import '../util/helperFunctions.dart';
 import '../widgets/cardCustomized.dart';
@@ -24,6 +22,18 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     String heading = "New system";
+    bool isLoading = false;
+
+    buildShowDialog(BuildContext context) {
+      return showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Center(
+              child: CircularProgressIndicator(color: primaryColor,),
+            );
+          });
+    }
 
     return Scaffold(
       backgroundColor: backgroundScaffoldColor,
@@ -53,11 +63,9 @@ class _MenuState extends State<Menu> {
                             left: 40, top: 20, bottom: 20),
                         child: GestureDetector(
                           onTap: () async {
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
 
                             // logicStart
                             var filePickerResult;
-                            var jsonFileString;
 
                             filePickerResult =
                                 await FilePicker.platform.pickFiles(
@@ -67,16 +75,14 @@ class _MenuState extends State<Menu> {
 
                             if (filePickerResult != null &&
                                 filePickerResult.files.isNotEmpty) {
-                              jsonFileString =
-                                  utf8.decode(filePickerResult.files[0].bytes);
 
-                              final url = Uri.parse('http://localhost:9000/files');
+                              final url = Uri.parse('http://localhost:9000/system');
                               final fileName = filePickerResult.names[0];
                               print(fileName);
 
                               final req = http.MultipartRequest('POST', url)
-                                ..files.add(await http.MultipartFile.fromBytes(
-                                  'fileb',
+                                ..files.add(http.MultipartFile.fromBytes(
+                                  'file',
                                     filePickerResult.files[0].bytes,
                                   filename: fileName,
                                   contentType: MediaType('application', 'json'),
@@ -84,24 +90,37 @@ class _MenuState extends State<Menu> {
 
                               req.headers['accept'] = 'application/json';
                               req.headers['Content-Type'] = 'multipart/form-data';
-                              req.headers['Access-Control-Allow-Origin'] = '*';
+
+                              setState(() {
+                                isLoading = true;
+                              });
+                              if(isLoading){
+                                buildShowDialog(context);
+                              }
 
                               final stream = await req.send();
                               final response = await http.Response.fromStream(stream);
+
+
+                              setState(() {
+                                isLoading = false;
+                                Navigator.pop(context);
+                              });
+
                               final status = response.statusCode;
                               if (status != 200) throw Exception('http.send error: statusCode= $status');
 
                               print(response.body);
 
 
-
                               if (response.statusCode == 200) {
                                 // If the server did return a 200 OK response,
                                 // then parse the JSON.
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content:
-                                        Text("Configuration file uploaded."),
+                                        Text("Configuration file uploaded successfully."),
                                   ),
                                 );
 
@@ -112,8 +131,16 @@ class _MenuState extends State<Menu> {
                                 // then throw an exception.
                                 // print(response.body);
                                 print(response.statusCode);
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content:
+                                    Text("Failed to Post config ${response.body}"),
+                                  ),
+                                );
+
                                 // print(req.headers);
-                                throw Exception('Failed to Post config');
+                                throw Exception('Failed to Post config ${response.body}');
                               }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -124,21 +151,9 @@ class _MenuState extends State<Menu> {
                                 ),
                               );
                             }
-
                             // logicEnd
 
                           },
-                          // child: ElevatedButton(
-                          //   onPressed: () {  },
-                          //   style: ButtonStyle(
-                          //     minimumSize: Size(100, 40)
-                          //   ),
-                          //   child: const Icon(
-                          //     Icons.add_rounded,
-                          //     size: 60,
-                          //     color: primaryColor,
-                          //   ),
-                          // ),
                           child: const CardCustomized(
                             child: Center(
                               child: Icon(

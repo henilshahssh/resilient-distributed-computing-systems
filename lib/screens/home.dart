@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
 import 'package:sepb_web_app/screens/node.dart';
+import 'package:sepb_web_app/util/constants.dart';
 import 'package:sepb_web_app/widgets/cardCustomized.dart';
 import 'package:sepb_web_app/widgets/formattedText.dart';
 import 'package:sepb_web_app/widgets/navBar.dart';
@@ -30,27 +31,37 @@ class _DashboardState extends State<Dashboard> {
       "metric": "-",
     }
   };
+  Timer? timer;
+  bool isLoaded = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    // nodes = fetchData() as Map;
-
-    // fetchData().then((result) {
-    //   print("result: $result");
-    //   setState(() {
-    //     nodes = result;
-    //   });
-    // });
-
-    nodes = fetchNodes();
+    timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => fetchData());
   }
 
-  Future<Map> fetchData() async {
-    final response = await http.get(Uri.parse('http://localhost:9000/'));
-    return jsonDecode(response.body);
+  fetchData() async {
+    print("Hello");
+    print(nodes);
+
+    if(nodes.isNotEmpty){
+      setState(() {
+        isLoaded = true;
+      });
+      timer?.cancel();
+      return;
+    }
+
+    print("world");
+
+    final response = await http.get(Uri.parse('http://localhost:9000/system'));
+
+    // final response = await http.get(Uri.parse('https://emojihub.yurace.pro/api/random'));
+
+    print(response.body);
+    setState(() {
+      nodes = jsonDecode(response.body);
+    });
   }
 
   @override
@@ -58,18 +69,18 @@ class _DashboardState extends State<Dashboard> {
     String heading = "Current state of the system";
 
     int totalNodes = nodes.length;
-    print(totalNodes);
+    // print(totalNodes);
 
     List<String> nodeNames = [];
     nodes.forEach((key, value) {
       nodeNames.add(key);
     });
-    //on tap
 
     List<String> headings = ["CPU: ", "Network: ", "Memory: ", "View more"];
 
     return Scaffold(
-      body: Column(
+      body: (isLoaded) ?
+      Column(
         children: [
           const NavBar(
             screenIndex: 1,
@@ -112,43 +123,11 @@ class _DashboardState extends State<Dashboard> {
                                     onTap: () {
                                       var node = nodes[nodeNames[index]];
 
-
                                       setState(() {
-                                        // if(node['cpu_percent']['metric'] != null){
-                                        //   // currentNode['cpu_percent']?['metric'] = node['cpu_percent']['metric'].toStringAsFixed(2);
-                                        //   currentNode['cpu_percent']?['metric'] = node['cpu_percent']['metric'].toString();
-                                        // }else{
-                                        //   currentNode['cpu_percent']?['metric'] = "-";
-                                        // }
-                                        //
-                                        // if(node['inbound_bandwidth']['metric'] != null){
-                                        //   currentNode['network_percent']?['incoming'] = node['inbound_bandwidth']['metric'].toStringAsFixed(2).toString();
-                                        //   // currentNode['network_percent']?['incoming'] = node['inbound_bandwidth']['metric'].toString();
-                                        // }else{
-                                        //   currentNode['network_percent']?['incoming'] = "-";
-                                        // }
-                                        //
-                                        // if(node['outbound_bandwidth']['metric'] != null){
-                                        //   currentNode['network_percent']?['outgoing'] = node['outbound_bandwidth']['metric'].toStringAsFixed(2).toString();
-                                        //   // currentNode['network_percent']?['outgoing'] = node['outbound_bandwidth']['metric'].toString();
-                                        // }else{
-                                        //   currentNode['network_percent']?['outgoing'] = "-";
-                                        // }
-                                        //
-                                        // if(node['memory_usage_percent']['metric'] != null){
-                                        //   // currentNode['memory_usage_percent']?['metric'] = node['memory_usage_percent']['metric'].toStringAsFixed(2);
-                                        //   currentNode['memory_usage_percent']?['metric'] = node['memory_usage_percent']['metric'].toString();
-                                        // }else{
-                                        //   currentNode['memory_usage_percent']?['metric'] = "-";
-                                        // }
-
-
-
                                         currentNode['cpu_percent']?['metric'] = node['cpu_percent']['metric'].toStringAsFixed(2);
                                         currentNode['network_percent']?['incoming'] = node['network_percent']['incoming'].toStringAsFixed(2).toString();
                                         currentNode['network_percent']?['outgoing'] = node['network_percent']['outgoing'].toStringAsFixed(2).toString();
                                         currentNode['memory_usage_percent']?['metric'] = node['memory_usage_percent']['metric'].toStringAsFixed(2);
-
                                       });
 
                                     },
@@ -182,63 +161,78 @@ class _DashboardState extends State<Dashboard> {
                               ),
                               SizedBox(
                                 height: 250,
-                                width: 300,
+                                width: 400,
                                 child: ListView(
                                   shrinkWrap: true,
                                   children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 200,
-                                          child: ListTile(
-                                            title: Text(headings[0]),
+                                    CardCustomized(
+                                      width: 10,
+                                      height: 60,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 200,
+                                            child: ListTile(
+                                              title: Text(headings[0]),
+                                            ),
                                           ),
-                                        ),
-                                        Text(currentNode['cpu_percent']!['metric']
-                                            .toString() + " %")
-                                      ],
+                                          Text("${currentNode['cpu_percent']!['metric']} %")
+                                        ],
+                                      ),
                                     ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 200,
-                                          child: ListTile(
-                                            title: Text(headings[1]),
+                                    CardCustomized(
+                                      width: 10,
+                                      height: 60,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 200,
+                                            child: ListTile(
+                                              title: Text(headings[1]),
+                                            ),
                                           ),
-                                        ),
-                                        Text(currentNode['network_percent']!['outgoing'].toString() + " ↑ " + currentNode['network_percent']!['incoming'].toString() + " ↓" )
-                                      ],
+                                          Text("${currentNode['network_percent']!['outgoing']} MB/s ↑  ${currentNode['network_percent']!['incoming']} MB/s ↓" )
+                                        ],
+                                      ),
                                     ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 200,
-                                          child: ListTile(
-                                            title: Text(headings[2]),
+                                    CardCustomized(
+                                      width: 10,
+                                      height: 60,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 200,
+                                            child: ListTile(
+                                              title: Text(headings[2]),
+                                            ),
                                           ),
-                                        ),
-                                        Text(currentNode['memory_usage_percent']!['metric'].toString() + " %")
-                                      ],
+                                          Text("${currentNode['memory_usage_percent']!['metric']} %")
+                                        ],
+                                      ),
                                     ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 200,
-                                          child: ListTile(
-                                            title: Text(headings[3]),
+                                    CardCustomized(
+                                      width: 10,
+                                      height: 60,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 200,
+                                            child: ListTile(
+                                              title: Text(headings[3]),
+                                            ),
                                           ),
-                                        ),
-                                        IconButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const NodeInfo()),
-                                              );
-                                            },
-                                            icon: Icon(Icons.link_outlined)),
-                                      ],
+                                          IconButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const NodeInfo()),
+                                                );
+                                              },
+                                              icon: const Icon(Icons.link_outlined)),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -254,8 +248,23 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ],
+      ) :
+      Column(
+        children: [
+          const NavBar(
+            screenIndex: 1,
+          ),
+          Container(margin: const EdgeInsets.all(200), child: const CircularProgressIndicator(color: primaryColor,)),
+          const FormattedText(text: "Please wait nodes are being created.")
+        ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   fetchNodes() {
