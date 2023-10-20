@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sepb_web_app/screens/menu.dart';
 import '../util/constants.dart';
 import 'formattedText.dart';
 
 class NavBar extends StatefulWidget {
   final double screenIndex;
+
   const NavBar({super.key, required this.screenIndex});
 
   @override
@@ -17,7 +19,7 @@ class _NavBarState extends State<NavBar> {
 
     return Container(
       color: primaryColor,
-      child: Column(
+      child: Row(
         children: [
           Container(
             height: iconAreaHeight,
@@ -39,11 +41,12 @@ class _NavBarState extends State<NavBar> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(left: 30, bottom: 10),
+            margin: const EdgeInsets.only(left: 290, bottom: 10, top: 50),
             child: Row(
               children: [
                 navItem(heading: "Menu", isSelected: 0 == widget.screenIndex),
-                navItem(heading: "Dashboard", isSelected: 1 == widget.screenIndex),
+                navItem(
+                    heading: "Dashboard", isSelected: 1 == widget.screenIndex),
                 // navItem(heading: "Support", isSelected: 2 == widget.screenIndex),
                 // navItem(heading: "Settings", isSelected: 3 == widget.screenIndex),
               ],
@@ -54,23 +57,30 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
-  Widget navItem({required String heading,
-      required bool isSelected}) {
+  Widget navItem({required String heading, required bool isSelected}) {
+    Color? color = (isSelected)
+        ? selectedMenuNavBarColor
+        : const Color.fromRGBO(0, 64, 57, 0);
 
-    Color? color = (isSelected) ? selectedMenuNavBarColor : const Color.fromRGBO(0, 64, 57, 0);
-
-    return Container(
-      margin: const EdgeInsets.only(right: 10),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(10),
+    return TextButton(
+      onPressed: () {
+        if(heading == "Menu"){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const Menu()));
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(10),
+          ),
         ),
-      ),
-      child: FormattedText(
-        text: heading,
-        color: Colors.white,
+        child: FormattedText(
+          text: heading,
+          color: Colors.white,
+        ),
       ),
     );
   }

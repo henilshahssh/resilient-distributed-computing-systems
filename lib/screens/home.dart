@@ -31,6 +31,16 @@ class _DashboardState extends State<Dashboard> {
       "metric": "-",
     }
   };
+  // var selectedNode = {
+  //   'id': 380392851, 'name': 'node3', 'monitoring': {'cpu': 5.1, 'memory': 18.3, 'bandwidth': {'outbound': 11192.983315685335, 'inbound': 8643.793942755594}}
+  // };
+
+  var selectedNodeId = '';
+  var selectedNodeCpu = '';
+  var selectedNodeMemory = '';
+  var selectedNodeNetworkIn = '';
+  var selectedNodeNetworkOut = '';
+
   Timer? timer;
   bool isLoaded = false;
 
@@ -41,8 +51,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   fetchData() async {
-    print("Hello");
-    print(nodes);
+    print("Nodes 44: $nodes");
 
     if(nodes.isNotEmpty){
       setState(() {
@@ -52,13 +61,11 @@ class _DashboardState extends State<Dashboard> {
       return;
     }
 
-    print("world");
-
-    final response = await http.get(Uri.parse('http://localhost:9000/system'));
+    final response = await http.get(Uri.parse('http://localhost:9000/v2/system'));
 
     // final response = await http.get(Uri.parse('https://emojihub.yurace.pro/api/random'));
 
-    print(response.body);
+    print("Response body: ${response.body}");
     setState(() {
       nodes = jsonDecode(response.body);
     });
@@ -73,8 +80,19 @@ class _DashboardState extends State<Dashboard> {
 
     List<String> nodeNames = [];
     nodes.forEach((key, value) {
+      print("Key: $key");
+      print("val: $value");
       nodeNames.add(key);
     });
+
+    print("Nodes 76: $nodes");
+
+    // nodes.forEach((key, value) {
+    //   for(var node in value){
+    //     nodeNames.add(node['name']);
+    //     print(node);
+    //   }
+    // });
 
     List<String> headings = ["CPU: ", "Network: ", "Memory: ", "View more"];
 
@@ -122,12 +140,19 @@ class _DashboardState extends State<Dashboard> {
                                     ),
                                     onTap: () {
                                       var node = nodes[nodeNames[index]];
+                                      print("131 $node");
 
                                       setState(() {
-                                        currentNode['cpu_percent']?['metric'] = node['cpu_percent']['metric'].toStringAsFixed(2);
-                                        currentNode['network_percent']?['incoming'] = node['network_percent']['incoming'].toStringAsFixed(2).toString();
-                                        currentNode['network_percent']?['outgoing'] = node['network_percent']['outgoing'].toStringAsFixed(2).toString();
-                                        currentNode['memory_usage_percent']?['metric'] = node['memory_usage_percent']['metric'].toStringAsFixed(2);
+                                        currentNode['cpu_percent']?['metric'] = node['monitoring']['cpu'].toStringAsFixed(2);
+                                        currentNode['network_percent']?['incoming'] = (node['monitoring']['bandwidth']['inbound']/1000000).toStringAsFixed(2).toString();
+                                        currentNode['network_percent']?['outgoing'] = (node['monitoring']['bandwidth']['outbound']/1000000).toStringAsFixed(2).toString();
+                                        currentNode['memory_usage_percent']?['metric'] = node['monitoring']['memory'].toStringAsFixed(2);
+
+                                        selectedNodeId = node['id'].toString();
+                                        selectedNodeCpu = currentNode['cpu_percent']!['metric']!;
+                                        selectedNodeMemory = currentNode['memory_usage_percent']!['metric']!;
+                                        selectedNodeNetworkIn = currentNode['network_percent']!['incoming']!;
+                                        selectedNodeNetworkOut = currentNode['network_percent']!['outgoing']!;
                                       });
 
                                     },
@@ -227,7 +252,7 @@ class _DashboardState extends State<Dashboard> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const NodeInfo()),
+                                                          NodeInfo(id: selectedNodeId, cpu: selectedNodeCpu, networkIn: selectedNodeNetworkIn, networkOut: selectedNodeNetworkOut, memory: selectedNodeMemory,)),
                                                 );
                                               },
                                               icon: const Icon(Icons.link_outlined)),
