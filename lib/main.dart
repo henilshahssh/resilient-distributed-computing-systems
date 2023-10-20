@@ -37,6 +37,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Dashboard();
+    return const Menu();
+      // const NodeInfo(id: '380400273', cpu: '2.0', memory: '19.1', networkIn: '225', networkOut: '457');
   }
 }
