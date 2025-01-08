@@ -9,6 +9,11 @@ This Flutter project is frontend for our final year Capstone Project – Resilie
 * Flutter
 * Dart
 
+## Getting Started
+1. Download and install Flutter with your choice of IDE.
+2. Download the code and open it as a Flutter project.
+3. Run the project and it should open the web app in a new window in your default browser.
+
 <!-- CONTACT -->
 ## Contact
 Henil Shah - [LinkedIn](https://www.linkedin.com/in/ssh-henil) - [Email](mailto:henilshahssh@gmail.com)\
