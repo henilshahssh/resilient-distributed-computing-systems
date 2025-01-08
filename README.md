@@ -1,7 +1,7 @@
 
 # Resilient Distributed Computing Systems
-<!-- ABOUT THE PROJECT -->
-## About The Project
+<!-- ABOUT THE PROJECT 
+## About The Project -->
 This Flutter project is frontend for our final year Capstone Project – Resilient distributed computing systems. It is designed to be intuitive, responsive, and user-friendly, ensuring seamless interaction with the underlying distributed system. It serves as a visual representation of the backend processes in real-time to make informed swift decisions.
 
 
