@@ -16,6 +16,6 @@ This Flutter project is frontend for our final year Capstone Project – Resilie
 
 <!-- CONTACT -->
 ## Contact
-Henil Shah - [LinkedIn](https://www.linkedin.com/in/ssh-henil) - [Email](mailto:henilshahssh@gmail.com)\
+Henil Shah - [LinkedIn](https://www.linkedin.com/in/henilshahssh) - [Email](mailto:henilshahssh@gmail.com)\
 Darwisyah Faqihah - [LinkedIn](https://www.linkedin.com/in/darwisyah-faqihah-045b47b1/)\
 Mohammad Chohan - [LinkedIn](https://www.linkedin.com/in/famulu/)
